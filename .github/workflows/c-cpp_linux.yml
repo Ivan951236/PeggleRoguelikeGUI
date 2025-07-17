@@ -11,7 +11,7 @@ jobs:
 
     env:
       QT_VERSION:      5.15.2
-      BUILD_DIR:       /a/_temp/build
+      BUILD_DIR:       /home/runner/work/_temp/build
 
     steps:
       - name: Checkout repository
