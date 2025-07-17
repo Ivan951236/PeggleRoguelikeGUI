@@ -38,7 +38,7 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: |
           qmake "${{ github.workspace }}/Peggle_Roguelike.pro"
-          gcc -B "${{ github.workspace }}" -o Peggle_Roguelike
+          gcc "${{ github.workspace }}/main.cpp" -o "${{ env.BUILD_DIR }}/Peggle_Roguelike"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
