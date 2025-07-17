@@ -34,11 +34,11 @@ jobs:
           # On Windows PowerShell runner this will honor backslashes just fine.
           mkdir "${{ env.BUILD_DIR }}"
 
-      - name: Build with qmake and make
+      - name: Build with qmake and gcc
         working-directory: ${{ env.BUILD_DIR }}
         run: |
           qmake "${{ github.workspace }}/Peggle_Roguelike.pro"
-          mingw32-make
+          gcc
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
