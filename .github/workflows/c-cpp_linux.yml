@@ -1,0 +1,47 @@
+name: Build Qt5 Application for Linux
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      QT_VERSION:      5.15.2
+      BUILD_DIR:       /a/_temp/build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version:      ${{ env.QT_VERSION }}
+          host:         linux
+          target:       desktop
+          arch:         gcc_64
+          use-official: true
+          email:        ${{ secrets.QT_EMAIL }}
+          pw:     ${{ secrets.QT_PW }}
+          cache:        true
+
+      - name: Create build directory
+        run: |
+          # On Windows PowerShell runner this will honor backslashes just fine.
+          mkdir "${{ env.BUILD_DIR }}"
+
+      - name: Build with qmake and make
+        working-directory: ${{ env.BUILD_DIR }}
+        run: |
+          qmake "${{ github.workspace }}/Peggle_Roguelike.pro"
+          mingw32-make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtAppBuild
+          path: ${{ env.BUILD_DIR }}/release/Peggle_Roguelike.exe
