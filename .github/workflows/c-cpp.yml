@@ -1,0 +1,41 @@
+name: Build Qt5 Application
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      QT_VERSION: 5.15.2
+      BUILD_DIR: ${{ runner.temp }}\build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: windows
+          target: desktop
+          arch: win64_mingw81
+          use_official: true
+          email: ${{ secrets.QT_EMAIL }}
+          pw: ${{ secrets.QT_PW }}
+
+      - name: Create build directory
+        run: mkdir ${{ env.BUILD_DIR }}
+
+      - name: Build with qmake and jom
+        working-directory: ${{ env.BUILD_DIR }}
+        run: |
+          qmake ${{ github.workspace }}/Peggle_Roguelike.pro
+          jom
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: QtAppBuild
+          path: ${{ env.BUILD_DIR }}\release\Peggle_Roguelike.exe
