@@ -23,7 +23,7 @@ jobs:
           version:      ${{ env.QT_VERSION }}
           host:         windows
           target:       desktop
-          arch:         win64_mingw
+          arch:         win64_llvm_mingw
           use-official: true
           email:        ${{ secrets.QT_EMAIL }}
           pw:     ${{ secrets.QT_PW }}
@@ -38,7 +38,7 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: |
           qmake6 "${{ github.workspace }}/Peggle_Roguelike.pro"
-          mingw32-make
+          mingw32-make.exe -f Makefile.Release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
