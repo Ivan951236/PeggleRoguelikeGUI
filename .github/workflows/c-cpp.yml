@@ -1,4 +1,4 @@
-name: Build Qt5 Application
+name: Build Qt6 Application
 
 on:
   push:
