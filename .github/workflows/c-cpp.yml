@@ -23,7 +23,7 @@ jobs:
           version:      ${{ env.QT_VERSION }}
           host:         windows
           target:       desktop
-          arch:         win64_llvm_mingw
+          arch:         win64_mingw
           use-official: true
           email:        ${{ secrets.QT_EMAIL }}
           pw:     ${{ secrets.QT_PW }}
