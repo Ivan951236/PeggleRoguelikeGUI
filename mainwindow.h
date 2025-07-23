@@ -9,7 +9,6 @@
 #include <QRandomGenerator>
 #include <QVector>
 #include <QString>
-#include <QDateTime>
 #include <QLabel>
 
 class MainWindow : public QMainWindow
