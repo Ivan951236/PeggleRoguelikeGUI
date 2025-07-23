@@ -1,5 +1,5 @@
 # PeggleRoguelikeGUI
-This is a Peggle Roguelike Preset Generator made in C++ and Qt 5
+This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
 ![The Layout for the roguelike!](https://raw.githubusercontent.com/Ivan951236/PeggleRoguelike/refs/heads/main/gallery/peggle_roguelike_layout.png)
 
 # Compilation Instrucions
