@@ -13,3 +13,9 @@ If Present, then run Qt Creator
 Select Project
 
 Do Build Project
+
+# Ask Questions
+
+## Telegram
+
+You may ask any questions about the project and/or Ivan's lastest repository updates over telegram by sending a message to @Ivanyanulev on Telegram
