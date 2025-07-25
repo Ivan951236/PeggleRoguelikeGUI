@@ -4,7 +4,7 @@ This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
 
 # Compilation Instrucions
 
-## Windows (and Linux's GUI):
+## Windows + Linux:
 
 Install ![Qt 6](https://qt.io) (qt.io)
 
