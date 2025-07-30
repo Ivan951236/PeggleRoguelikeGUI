@@ -41,7 +41,7 @@ void MainWindow::setupNameMaps()
     invNames = {
         {}, 
         "Bjorn", "Jimmy Lighting", "Kat Tut", "Spork",
-        "Caudle", "Reinfield", "Tula", "Warren",
+        "Claude", "Reinfield", "Tula", "Warren",
         "Lord Cinderbottom", "Master Hu"
     };
 
