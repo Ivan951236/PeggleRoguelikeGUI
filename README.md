@@ -14,6 +14,16 @@ Select Project
 
 Do Build Project
 
+## Android
+
+Install ![Android Studio](https://developer.android.com/studio/index.html)
+
+Run Android Studio
+
+Select the "android" folder from the project's root
+
+Run Project (or build APK, then install on android device/virtual android device)
+
 # Ask Questions
 
 ## Telegram
