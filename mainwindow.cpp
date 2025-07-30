@@ -41,8 +41,8 @@ void MainWindow::setupNameMaps()
     invNames = {
         {}, 
         "Bjorn", "Jimmy Lighting", "Kat Tut", "Spork",
-        "Caddle", "Reinfield", "Tula", "Magic Hat",
-        "Nice Green Dragon", "Master Xu"
+        "Caudle", "Reinfield", "Tula", "Warren",
+        "Lord Cinderbottom", "Master Hu"
     };
 
     // pegle level names (1–50)
