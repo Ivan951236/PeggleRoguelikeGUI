@@ -23,9 +23,3 @@ Run Android Studio
 Select the "android" folder from the project's root
 
 Run Project (or build APK, then install on android device/virtual android device)
-
-# Ask Questions
-
-## Telegram
-
-You may ask any questions about the project and/or Ivan's lastest repository updates over telegram by sending a message to @Ivanyanulev on Telegram
