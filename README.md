@@ -16,10 +16,10 @@ Do Build Project
 
 ## Android
 
-Install ![Android Studio](https://developer.android.com/studio/index.html)
+for a rookie user, it is reccomended to install ![Android Studio](https://developer.android.com/studio/index.html) to start here
 
-Run Android Studio
+Run Android Studio, or a FLOSS apporach is to instead use gradle to update the packages for the repository
 
-Select the "android" folder from the project's root
+Select the "android" folder from the project's root, or a FLOSS apporach would be is to run `./gradlew build`
 
-Run Project (or build APK, then install on android device/virtual android device)
+Run Project, by either running it from Android Studio or instead use `./gradlew run`
