@@ -16,6 +16,8 @@ Do Build Project
 
 ## Android
 
+For FLOSS Release, choose `floss` branch instead of `master` branch
+
 for a rookie user, it is reccomended to install ![Android Studio](https://developer.android.com/studio/index.html) to start here
 
 Run Android Studio, or a FLOSS apporach is to instead use gradle to update the packages for the repository
