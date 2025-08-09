@@ -5,15 +5,15 @@ plugins {
 }
 
 android {
-    namespace = "ua.ivan95.pegglepegs"
+    namespace = "io.github.ivan951236"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "ua.ivan95.pegglepegs"
+        applicationId = "io.github.ivan951236"
         minSdk = 29
         targetSdk = 36
-        versionCode = 4
-        versionName = "Green Clamshell (v1.3)"
+        versionCode = 5
+        versionName = "Green Clamshell: The Second Claw (v1.3.1)"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
