@@ -10,13 +10,11 @@ Install ![Qt 6](https://qt.io) (qt.io)
 
 If Present, then run Qt Creator
 
-Select Project
+Select the .pro file in .windows directory
 
 Do Build Project
 
 ## Android
-
-For FLOSS Release, choose `floss` branch instead of `master` branch
 
 for a rookie user, it is reccomended to install ![Android Studio](https://developer.android.com/studio/index.html) to start here
 
