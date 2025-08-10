@@ -1,0 +1,16 @@
+A program that makes Peggle Roguelike easy!
+
+Peggle Roguelike Preset Generator allows you to play Peggle in a Roguelike matter in a easy and automated way!
+It's already cross-platform, it's already made for many platforms such as:
+Desktop:
+         Windows
+         Linux
+Mobile:
+         Android
+
+I don't have the MacOS machine to make MacOS release for, so for MacOS users, cry about it >:)
+
+And that's about it for the description, anyways it does generate the followings tho as part of the preset:
+* Inventory
+* Peggle Levels + rewards
+* Boss Level
