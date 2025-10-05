@@ -4,7 +4,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_central(new QWidget(this))
     , m_vbox(new QVBoxLayout)
+    , m_buttonLayout(new QHBoxLayout)
     , m_button(new QPushButton(tr("Generate"), this))
+    , m_themeButton(new QPushButton(tr("Toggle Dark Mode"), this))
     , m_tabs(new QTabWidget(this))
     , m_gridInv(new QGridLayout)
     , m_gridPeggle(new QGridLayout)
@@ -14,7 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Build UI
     m_vbox->addWidget(m_tabs, 1);
-    m_vbox->addWidget(m_button, 0, Qt::AlignTop);
+    
+    // Button layout with Generate and Theme Toggle buttons
+    m_buttonLayout->addWidget(m_button);
+    m_buttonLayout->addWidget(m_themeButton);
+    m_vbox->addLayout(m_buttonLayout, 0);
 
     auto *pageInv    = new QWidget; pageInv->setLayout(m_gridInv);
     auto *pagePeggle = new QWidget; pagePeggle->setLayout(m_gridPeggle);
@@ -26,11 +32,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_central->setLayout(m_vbox);
     setCentralWidget(m_central);
-    setWindowTitle(tr("Inventory / Peggle / Boss Generator"));
-    resize(600, 300);
+    setWindowTitle(tr("Peggle Roguelike Preset Generator"));
+    resize(800, 400);
 
+    // Connect signals
     connect(m_button, &QPushButton::clicked,
             this, &MainWindow::onGenerateClicked);
+    connect(m_themeButton, &QPushButton::clicked,
+            this, &MainWindow::onThemeToggleClicked);
+    connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
+            this, &MainWindow::onThemeChanged);
+            
+    // Apply initial theme
+    onThemeChanged(ThemeManager::instance().currentTheme());
 }
 
 MainWindow::~MainWindow() = default;
@@ -95,12 +109,15 @@ void MainWindow::onGenerateClicked()
     clearLayout(m_gridPeggle);
     clearLayout(m_gridBoss);
 
+    const QString labelStyle = ThemeManager::instance().getLabelStyleSheet();
+
     // 2) Inventory (3×1) – only show the name
     for (int i = 0; i < 3; ++i) {
         int n = QRandomGenerator::global()->bounded(1, invNames.size());
         QString txt = invNames[n];                       // ← no "NN " prefix
         auto *lbl = new QLabel(txt);
         lbl->setAlignment(Qt::AlignCenter);
+        lbl->setStyleSheet(labelStyle);
         m_gridInv->addWidget(lbl, 0, i);
     }
 
@@ -113,6 +130,7 @@ void MainWindow::onGenerateClicked()
                           .arg(invNames[d2]);            // ← drop the numbers
         auto *lbl = new QLabel(txt);
         lbl->setAlignment(Qt::AlignCenter);
+        lbl->setStyleSheet(labelStyle);
         int row = i / 8, col = i % 8;
         m_gridPeggle->addWidget(lbl, row, col);
     }
@@ -126,6 +144,46 @@ void MainWindow::onGenerateClicked()
                           .arg(invNames[d2]);            // ← numbers still used internally
         auto *lbl = new QLabel(txt);
         lbl->setAlignment(Qt::AlignCenter);
+        lbl->setStyleSheet(labelStyle);
         m_gridBoss->addWidget(lbl, 0, 0);
     }
+}
+
+void MainWindow::onThemeToggleClicked()
+{
+    Theme currentTheme = ThemeManager::instance().currentTheme();
+    Theme newTheme = (currentTheme == Theme::Light) ? Theme::Dark : Theme::Light;
+    ThemeManager::instance().setTheme(newTheme);
+}
+
+void MainWindow::onThemeChanged(Theme theme)
+{
+    // Update button text
+    if (theme == Theme::Light) {
+        m_themeButton->setText(tr("Toggle Dark Mode"));
+    } else {
+        m_themeButton->setText(tr("Toggle Light Mode"));
+    }
+    
+    // Apply style sheets to all components
+    setStyleSheet(ThemeManager::instance().getMainWindowStyleSheet());
+    m_central->setStyleSheet(ThemeManager::instance().getCentralWidgetStyleSheet());
+    m_tabs->setStyleSheet(ThemeManager::instance().getTabWidgetStyleSheet());
+    m_button->setStyleSheet(ThemeManager::instance().getPushButtonStyleSheet());
+    m_themeButton->setStyleSheet(ThemeManager::instance().getPushButtonStyleSheet());
+    
+    // Update existing labels
+    const QString labelStyle = ThemeManager::instance().getLabelStyleSheet();
+    
+    auto updateLabelsInLayout = [&labelStyle](QGridLayout *layout) {
+        for (int i = 0; i < layout->count(); ++i) {
+            if (auto *label = qobject_cast<QLabel*>(layout->itemAt(i)->widget())) {
+                label->setStyleSheet(labelStyle);
+            }
+        }
+    };
+    
+    updateLabelsInLayout(m_gridInv);
+    updateLabelsInLayout(m_gridPeggle);
+    updateLabelsInLayout(m_gridBoss);
 }

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QGridLayout>
@@ -10,6 +11,7 @@
 #include <QVector>
 #include <QString>
 #include <QLabel>
+#include "thememanager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +23,8 @@ public:
 
 private slots:
     void onGenerateClicked();
+    void onThemeToggleClicked();
+    void onThemeChanged(Theme theme);
 
 private:
     void setupNameMaps();
@@ -28,7 +32,9 @@ private:
 
     QWidget*      m_central;
     QVBoxLayout*  m_vbox;
+    QHBoxLayout*  m_buttonLayout;
     QPushButton*  m_button;
+    QPushButton*  m_themeButton;
     QTabWidget*   m_tabs;
     QGridLayout*  m_gridInv;
     QGridLayout*  m_gridPeggle;
