@@ -1,5 +1,16 @@
 # PeggleRoguelikeGUI
 This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
+# Custom Themes
+This Program supports Custom Themes to be used with the program (Desktop Only)
+It only allows for Color modification, however with enough effort, we can make it change the layout or make it change the icons provided
+Since this IS a Java project, it is limited to Material Design 3
+To install, install it to JAR dir's customThemes directory
+It uses YAML for it, refer to Compilation Instrucions for more information
+It also has a Custom Theme Database too, located at [Ivan951236/PeggleRoguelikeThemes](https://github.com/Ivan951236/PeggleRoguelikeThemes) repository
+I do allow people to make custom clients for this database to make it easier to install the themes
+Thus it can be easier to have your own theme likes for it
+You can also extract your wallpaper's color pattern using [SuperColorPalette](https://supercolorpalette.com) website for it, and using the colors in your own theme
+And changing the mode boolean accordingly to each mode (light, dark)
 # Compilation Instrucions
 
 ## Desktop Program
