@@ -2,15 +2,18 @@
 This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
 # Compilation Instrucions
 
-## Windows + Linux:
+## Desktop Program
+Install the Java 17 version of Java JDK or Java JRE from any provider such as Oracle, Adoptium or OpenJDK
 
-Install ![Qt 6](https://qt.io) (qt.io)
+Change directory to ./.java
 
-If Present, then run Qt Creator
+For Linux or MacOS, just install Gradle before building
 
-Select the .pro file in .windows directory
+In this directory do "./gradlew.bat build" or "gradle build" depending on the operating system
 
-Do Build Project
+After that you should run it using "./gradlew.bat run" or "gradle run" depending on the operating system, or just run the library from build/libs
+
+Custom Themes uses YAML for it
 
 ## Android
 
