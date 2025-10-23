@@ -15,6 +15,22 @@ After that you should run it using "./gradlew.bat run" or "gradle run" depending
 
 Custom Themes uses YAML for it
 
+the template goes as follows:
+
+```
+name: Gameboy Green
+mode: light
+primary: "#8BAC0F"
+onPrimary: "#0F380F"
+background: "#E0F8D0"
+onBackground: "#0F380F"
+surface: "#E0F8D0"
+onSurface: "#0F380F"
+outline: "#306230"
+```
+
+This is for light mode, to change to dark mode, change the mode boolean to dark
+
 ## Android
 
 for a rookie user, it is reccomended to install ![Android Studio](https://developer.android.com/studio/index.html) to start here
