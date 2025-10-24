@@ -573,6 +573,9 @@ private void updateLabelsInPanel(JPanel panel) {
         lblOverall.setText("Overall: " + String.format("%.2f", overall));
         lblRank.setText("Rank: " + rank);
 
+        // Write YAML rank calculation log into JAR dir's rankCalcs folder
+        RankCalcLogger.writeRankCalculationYaml(rw, lw, cl, tm, lr, lob, f100, overall, rank);
+
         // Save to config
         ConfigManager cfg = ConfigManager.getInstance();
         cfg.setLevelField("roguelikeWins", rw);
