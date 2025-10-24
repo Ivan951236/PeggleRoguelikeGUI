@@ -1,6 +1,6 @@
 # Peggle Roguelike Preset Generator
 
-This is a Java Swing application converted from a C++ Qt6 application. It generates random presets for a Peggle Roguelike game.
+This is a Java Swing application converted from a C++ Qt6 application. It generates random presets for a Peggle Roguelike gamemode for peggle.
 
 ## Original Language
 **C++** with Qt6 framework
