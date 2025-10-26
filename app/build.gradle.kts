@@ -10,10 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "io.github.ivan951236"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 36
-        versionCode = 5
-        versionName = "Green Clamshell: The Second Claw (v1.3.1)"
+        versionCode = 7
+        versionName = "Spooky Casino (1.4)"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,19 +28,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
+    buildToolsVersion = "36.1.0"
+    ndkVersion = "29.0.14206865"
 }
 
 dependencies {
-    val navVersion = "2.9.1" // Use the latest stable version
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +50,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation.android)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,14 +60,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.core:core-ktx:...")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:...")
-    implementation("androidx.activity:activity-compose:...")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.navigation:navigation-compose:...")
-    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation(libs.androidx.core.ktx.vx)
+    implementation(libs.androidx.lifecycle.runtime.ktx.vx)
+    implementation(libs.androidx.activity.compose.vx)
+    implementation(platform(libs.androidx.compose.bom.v20230800))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose.v291)
 }

@@ -4,11 +4,11 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-08-10T06:22:05.460848Z">
+        <DropdownSelection timestamp="2025-10-25T15:13:16.178454400Z">
           <Target type="DEFAULT_BOOT">
-            <template>
-              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=gts8wifi/34" />
-            </template>
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=MZEAPFOBNBU8XOHU" />
+            </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />

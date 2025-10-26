@@ -1,4 +1,4 @@
-package ua.ivan95.pegglepegs.ui.theme
+package io.github.ivan951236.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

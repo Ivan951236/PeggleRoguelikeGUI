@@ -3,27 +3,55 @@ package io.github.ivan951236
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*       // Material 3
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import io.github.ivan951236.ui.DuelScreen
+import io.github.ivan951236.ui.RankCalculationScreen
+import io.github.ivan951236.ui.settings.SettingsScreen
+import io.github.ivan951236.utils.ThemePreferences
+import io.github.ivan951236.utils.ThemeState
 import io.github.ivan951236.ui.theme.PeggleRoguelikePresetGeneratorTheme
-import ua.ivan95.pegglepegs.ui.theme.PeggleRoguelikePresetGeneratorTheme
 
 // 1) Top‐level name lists
 private val inventoryItemNames = listOf(
     "Bjorn",
     "Jimmy Lighting",
     "Kat Tut",
-    "Sprok",
+    "Spork",
     "Claude",
     "Reinfield",
     "Tula",
-    "Waren",
+    "Warren",
     "Lord Cinderbottom",
     "Master Hu"
 )
@@ -54,14 +82,21 @@ sealed class Screen(val route: String, val title: String) {
     object PeggleLevels : Screen("peggle_levels", "Peggle Levels")
     object BossLevel    : Screen("boss_level",   "Boss Level")
     object Inventory    : Screen("inventory",     "Inventory")
+    object Settings     : Screen("settings",      "Settings")
+    object Duel         : Screen("duel",          "Duel")
+    object RankCalculation : Screen("rank_calculation", "Rank Calculator")
 }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PeggleRoguelikePresetGeneratorTheme {
-                AppNavigator()
+            val themeState = ThemeState.rememberThemeState()
+            
+            PeggleRoguelikePresetGeneratorTheme(
+                dynamicColor = themeState.dynamicColor
+            ) {
+                AppNavigator(themeState)
             }
         }
     }
@@ -69,27 +104,99 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigator() {
+fun AppNavigator(themeState: ThemeState) {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val themePreferences = remember { ThemePreferences.getInstance(context) }
+    
+    // For menu state
+    var showMenu by remember { mutableStateOf(false) }
+    
     Scaffold(
         topBar = {
-            topAppBar {
-                val currentRoute = navController
-                    .currentBackStackEntryAsState()
-                    .value
-                    ?.destination
-                    ?.route
-                Text(
-                    text = when (currentRoute) {
-                        Screen.PeggleLevels.route -> Screen.PeggleLevels.title
-                        Screen.BossLevel.route    -> Screen.BossLevel.title
-                        Screen.Inventory.route    -> Screen.Inventory.title
-                        else                      -> "Peggle App"
+            TopAppBar(
+                title = {
+                    val currentRoute = navController
+                        .currentBackStackEntryAsState()
+                        .value
+                        ?.destination
+                        ?.route
+                    Text(
+                        text = when (currentRoute) {
+                            Screen.PeggleLevels.route -> Screen.PeggleLevels.title
+                            Screen.BossLevel.route    -> Screen.BossLevel.title
+                            Screen.Inventory.route    -> Screen.Inventory.title
+                            Screen.Settings.route     -> Screen.Settings.title
+                            Screen.Duel.route         -> Screen.Duel.title
+                            Screen.RankCalculation.route -> Screen.RankCalculation.title
+                            else                      -> "Peggle App"
+                        }
+                    )
+                },
+                actions = {
+                    val currentRoute = navController
+                        .currentBackStackEntryAsState()
+                        .value
+                        ?.destination
+                        ?.route
+                    
+                    // Only show menu on main screens, not on settings, duel, or rank screens
+                    if (currentRoute != Screen.Settings.route && 
+                        currentRoute != Screen.Duel.route && 
+                        currentRoute != Screen.RankCalculation.route) {
+                        
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Menu"
+                            )
+                        }
+                        
+                        // Menu dropdown
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Settings") },
+                                onClick = {
+                                    showMenu = false
+                                    navController.navigate(Screen.Settings.route)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Duel Mode") },
+                                onClick = {
+                                    showMenu = false
+                                    navController.navigate(Screen.Duel.route)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Rank Calculator") },
+                                onClick = {
+                                    showMenu = false
+                                    navController.navigate(Screen.RankCalculation.route)
+                                }
+                            )
+                        }
                     }
-                )
-            }
+                }
+            )
         },
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { 
+            val currentRoute = navController
+                .currentBackStackEntryAsState()
+                .value
+                ?.destination
+                ?.route
+            
+            // Only show bottom navigation on main screens, not on settings, duel, or rank screens
+            if (currentRoute != Screen.Settings.route && 
+                currentRoute != Screen.Duel.route && 
+                currentRoute != Screen.RankCalculation.route) {
+                BottomNavigationBar(navController)
+            }
+        }
     ) { innerPadding ->
         NavHost(
             navController    = navController,
@@ -99,11 +206,28 @@ fun AppNavigator() {
             composable(Screen.PeggleLevels.route) { PeggleLevelsScreen() }
             composable(Screen.BossLevel.route)    { BossLevelScreen()    }
             composable(Screen.Inventory.route)    { InventoryScreen()    }
+            composable(Screen.Settings.route)     { 
+                SettingsScreen(
+                    onBackClick = { navController.popBackStack() },
+                    themeState = themeState
+                ) 
+            }
+            composable(Screen.Duel.route) {
+                DuelScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onStartGame = { navController.navigate(Screen.PeggleLevels.route) }
+                )
+            }
+            composable(Screen.RankCalculation.route) {
+                RankCalculationScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
         }
     }
 }
 
-fun topAppBar(scrollBehavior: @Composable () -> Unit) {}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,18 +246,18 @@ fun BottomNavigationBar(navController: NavController) {
 
         items.forEach { screen ->
             NavigationBarItem(
-                icon     = { /* optional icon */ },
-                label    = { Text(screen.title) },
+                label = { Text(screen.title) },
                 selected = currentRoute == screen.route,
-                onClick  = {
+                onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                         }
                         launchSingleTop = true
-                        restoreState    = true
+                        restoreState = true
                     }
-                }
+                },
+                icon = { /* Empty icon for now, can be added later */ }
             )
         }
     }
@@ -147,10 +271,32 @@ fun generatePeggleLevels(): List<Pair<String, String>> =
         level to modifier
     }
 
+// Dual player version
+fun generatePeggleLevelsForDual(): Pair<List<Pair<String, String>>, List<Pair<String, String>>> {
+    val player1Levels = List(15) {
+        val level    = peggleLevelNames.random()
+        val modifier = inventoryItemNames.random()
+        level to modifier
+    }
+    val player2Levels = List(15) {
+        val level    = peggleLevelNames.random()
+        val modifier = inventoryItemNames.random()
+        level to modifier
+    }
+    return Pair(player1Levels, player2Levels)
+}
+
 fun generateBossLevel(): Pair<String, String> {
     val boss     = bossLevelNames.random()
     val modifier = inventoryItemNames.random()
     return boss to modifier
+}
+
+// Dual player version
+fun generateBossLevelForDual(): Pair<Pair<String, String>, Pair<String, String>> {
+    val player1Boss = generateBossLevel()
+    val player2Boss = generateBossLevel()
+    return Pair(player1Boss, player2Boss)
 }
 
 fun generateInventory(): List<String> =
@@ -158,53 +304,161 @@ fun generateInventory(): List<String> =
         inventoryItemNames.random()
     }
 
+// Dual player version
+fun generateInventoryForDual(): Pair<List<String>, List<String>> {
+    val player1Inventory = List(3) {
+        inventoryItemNames.random()
+    }
+    val player2Inventory = List(3) {
+        inventoryItemNames.random()
+    }
+    return Pair(player1Inventory, player2Inventory)
+}
+
 // 4) Composables that only render names
 @Composable
 fun PeggleLevelsScreen() {
-    val data = remember { generatePeggleLevels() }
-    Column(
-        modifier           = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Peggle Levels", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(16.dp))
-        data.forEach { (level, mod) ->
-            Text("$level — Modifier: $mod")
+    if (GameState.currentMode == GameMode.DUEL && GameState.player1 != null && GameState.player2 != null) {
+        // Duel mode: show levels for both players
+        val (player1Levels, player2Levels) = remember { generatePeggleLevelsForDual() }
+        
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Duel Mode", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 1 Levels
+            Text("${GameState.player1?.name ?: "Player 1"} Levels", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            player1Levels.forEach { (level, mod) ->
+                Text("$level — Modifier: $mod")
+            }
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 2 Levels
+            Text("${GameState.player2?.name ?: "Player 2"} Levels", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            player2Levels.forEach { (level, mod) ->
+                Text("$level — Modifier: $mod")
+            }
+        }
+    } else {
+        // Single player mode
+        val data = remember { generatePeggleLevels() }
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Peggle Levels", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            data.forEach { (level, mod) ->
+                Text("$level — Modifier: $mod")
+            }
         }
     }
 }
 
 @Composable
 fun BossLevelScreen() {
-    val (boss, mod) = remember { generateBossLevel() }
-    Column(
-        modifier           = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Boss Level", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(16.dp))
-        Text("Boss: $boss")
-        Text("Modifier: $mod")
+    if (GameState.currentMode == GameMode.DUEL && GameState.player1 != null && GameState.player2 != null) {
+        // Duel mode: show boss levels for both players
+        val (player1Boss, player2Boss) = remember { generateBossLevelForDual() }
+        
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Duel Mode", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 1 Boss
+            Text("${GameState.player1?.name ?: "Player 1"} Boss", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            Text("Boss: ${player1Boss.first}")
+            Text("Modifier: ${player1Boss.second}")
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 2 Boss
+            Text("${GameState.player2?.name ?: "Player 2"} Boss", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            Text("Boss: ${player2Boss.first}")
+            Text("Modifier: ${player2Boss.second}")
+        }
+    } else {
+        // Single player mode
+        val (boss, mod) = remember { generateBossLevel() }
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Boss Level", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            Text("Boss: $boss")
+            Text("Modifier: $mod")
+        }
     }
 }
 
 @Composable
 fun InventoryScreen() {
-    val items = remember { generateInventory() }
-    Column(
-        modifier           = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Inventory", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(16.dp))
-        items.forEach { name ->
-            Text(name)
+    if (GameState.currentMode == GameMode.DUEL && GameState.player1 != null && GameState.player2 != null) {
+        // Duel mode: show inventories for both players
+        val (player1Inventory, player2Inventory) = remember { generateInventoryForDual() }
+        
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Duel Mode", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 1 Inventory
+            Text("${GameState.player1?.name ?: "Player 1"} Inventory", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            player1Inventory.forEach { name ->
+                Text(name)
+            }
+            Spacer(Modifier.height(16.dp))
+            
+            // Player 2 Inventory
+            Text("${GameState.player2?.name ?: "Player 2"} Inventory", 
+                 style = MaterialTheme.typography.headlineSmall,
+                 color = MaterialTheme.colorScheme.primary)
+            player2Inventory.forEach { name ->
+                Text(name)
+            }
+        }
+    } else {
+        // Single player mode
+        val items = remember { generateInventory() }
+        Column(
+            modifier           = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Inventory", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+            items.forEach { name ->
+                Text(name)
+            }
         }
     }
 }
