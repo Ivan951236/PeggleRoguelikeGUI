@@ -2,7 +2,9 @@
 This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
 
 # Custom Themes
-This Program supports Custom Themes to be used with the program (Desktop Only)
+Desktop Java from the [PeggleRoguelikeJava](https://github.com/Ivan951236/PeggleRoguelikeJava) repository is currently the only version that supports this feature...
+
+This Program supports Custom Themes to be used with the program
 
 It only allows for Color modification, however with enough effort, we can make it change the layout or make it change the icons provided
 
@@ -27,7 +29,7 @@ And changing the mode boolean accordingly to each mode (light, dark)
 ## Desktop Program
 Install the Java 17 version of Java JDK or Java JRE from any provider such as Oracle, Adoptium or OpenJDK
 
-Change directory to ./.java
+The Java Program is now on [PeggleRoguelikeJava](https://github.com/Ivan951236/PeggleRoguelikeJava) repository, please use code from there instead for Desktop Program
 
 For Linux or MacOS, just install Gradle before building
 
