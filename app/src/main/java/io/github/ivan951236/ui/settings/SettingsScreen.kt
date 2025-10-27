@@ -10,18 +10,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import io.github.ivan951236.GameState
 import io.github.ivan951236.utils.ThemePreferences
+import io.github.ivan951236.utils.PermissionsUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
-    themeState: io.github.ivan951236.utils.ThemeState
+    themeState: io.github.ivan951236.utils.ThemeState,
+    onNavigateToDarkThemes: () -> Unit = {},
+    onNavigateToLightThemes: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val themePreferences = remember { ThemePreferences.getInstance(context) }
     
     var selectedThemeMode by remember { 
         mutableStateOf(themePreferences.getThemeMode()) 
+    }
+    var selectedAppTheme by remember { 
+        mutableStateOf(themePreferences.getSelectedAppTheme()) 
     }
 
     Column(
@@ -77,6 +83,84 @@ fun SettingsScreen(
                 themeState.updateTheme(themePreferences)
             }
         )
+        
+        // App theme selection options
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "App Themes",
+            style = MaterialTheme.typography.titleLarge
+        )
+        
+        ThemeRadioButton(
+            text = "Default Theme",
+            selected = selectedAppTheme == io.github.ivan951236.ui.theme.AppTheme.DEFAULT,
+            onClick = {
+                selectedAppTheme = io.github.ivan951236.ui.theme.AppTheme.DEFAULT
+                themePreferences.setSelectedAppTheme(io.github.ivan951236.ui.theme.AppTheme.DEFAULT)
+                themeState.updateTheme(themePreferences)
+            }
+        )
+        
+        ThemeRadioButton(
+            text = "Light Purple",
+            selected = selectedAppTheme == io.github.ivan951236.ui.theme.AppTheme.LIGHT_PURPLE,
+            onClick = {
+                selectedAppTheme = io.github.ivan951236.ui.theme.AppTheme.LIGHT_PURPLE
+                themePreferences.setSelectedAppTheme(io.github.ivan951236.ui.theme.AppTheme.LIGHT_PURPLE)
+                themeState.updateTheme(themePreferences)
+            }
+        )
+        
+        ThemeRadioButton(
+            text = "Black Purple (AMOLED)",
+            selected = selectedAppTheme == io.github.ivan951236.ui.theme.AppTheme.BLACK_PURPLE_AMOLED,
+            onClick = {
+                selectedAppTheme = io.github.ivan951236.ui.theme.AppTheme.BLACK_PURPLE_AMOLED
+                themePreferences.setSelectedAppTheme(io.github.ivan951236.ui.theme.AppTheme.BLACK_PURPLE_AMOLED)
+                themeState.updateTheme(themePreferences)
+            }
+        )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Custom themes selector
+        Text(
+            text = "Custom Themes",
+            style = MaterialTheme.typography.titleLarge
+        )
+        
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = onNavigateToDarkThemes,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Dark Themes")
+            }
+            
+            Button(
+                onClick = onNavigateToLightThemes,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Light Themes")
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // All Files access permission button
+        Button(
+            onClick = { 
+                PermissionsUtils.requestAllFilesAccessPermission(context)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val hasPermission = PermissionsUtils.hasAllFilesAccessPermission(context)
+            Text(if (hasPermission) "All Files Access Granted" else "Request All Files Access")
+        }
         
         Spacer(modifier = Modifier.weight(1f))
         

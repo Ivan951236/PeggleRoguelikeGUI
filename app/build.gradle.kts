@@ -9,11 +9,11 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "io.github.ivan951236"
+        applicationId = "io.github.ivan951236.hardpeggle"
         minSdk = 30
         targetSdk = 36
-        versionCode = 7
-        versionName = "Spooky Casino (1.4)"
+        versionCode = 9
+        versionName = "Indefiny (1.4.6+hard)"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

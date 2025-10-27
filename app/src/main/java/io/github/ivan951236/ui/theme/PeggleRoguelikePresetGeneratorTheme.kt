@@ -34,21 +34,57 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+// Light Purple theme color scheme
+private val LightPurpleColorScheme = lightColorScheme(
+    primary = LightPurplePrimary,
+    secondary = LightPurpleSecondary,
+    tertiary = LightPurplePrimaryVariant,
+    surface = LightPurpleSurface,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
+
+// Black Purple (AMOLED) theme color scheme
+private val BlackPurpleAmoledColorScheme = darkColorScheme(
+    primary = AmoledPrimary,
+    secondary = AmoledSecondary,
+    tertiary = AmoledPrimaryVariant,
+    surface = AmoledSurface,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onBackground = Color.White,
+    onSurface = AmoledOnSurface
+)
+
+enum class AppTheme {
+    DEFAULT,
+    LIGHT_PURPLE,
+    BLACK_PURPLE_AMOLED
+}
+
 @Composable
 fun PeggleRoguelikePresetGeneratorTheme(
+    theme: AppTheme = AppTheme.DEFAULT,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colorScheme = when (theme) {
+        AppTheme.LIGHT_PURPLE -> LightPurpleColorScheme
+        AppTheme.BLACK_PURPLE_AMOLED -> BlackPurpleAmoledColorScheme
+        AppTheme.DEFAULT -> {
+            when {
+                dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                    val context = LocalContext.current
+                    if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+                }
+                darkTheme -> DarkColorScheme
+                else -> LightColorScheme
+            }
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
     }
 
     MaterialTheme(

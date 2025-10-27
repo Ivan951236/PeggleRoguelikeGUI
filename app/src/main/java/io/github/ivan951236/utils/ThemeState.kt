@@ -7,15 +7,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.DisposableEffect
+import io.github.ivan951236.ui.theme.AppTheme
 
 class ThemeState {
     private val _dynamicColor = mutableStateOf(false)
     val dynamicColor: Boolean by _dynamicColor
+    
+    private val _selectedTheme = mutableStateOf(AppTheme.DEFAULT)
+    val selectedTheme: AppTheme by _selectedTheme
 
     fun updateTheme(themePreferences: ThemePreferences) {
         val newDynamicColor = themePreferences.shouldUseDynamicColors()
         if (_dynamicColor.value != newDynamicColor) {
             _dynamicColor.value = newDynamicColor
+        }
+        
+        val newSelectedTheme = themePreferences.getSelectedAppTheme()
+        if (_selectedTheme.value != newSelectedTheme) {
+            _selectedTheme.value = newSelectedTheme
         }
     }
 
@@ -33,7 +42,7 @@ class ThemeState {
                 // Watch for changes to theme preferences
                 val listener = object : android.content.SharedPreferences.OnSharedPreferenceChangeListener {
                     override fun onSharedPreferenceChanged(sharedPreferences: android.content.SharedPreferences?, key: String?) {
-                        if (key == "theme_mode") {
+                        if (key == "theme_mode" || key == "selected_theme") {
                             themeState.updateTheme(themePreferences)
                         }
                     }

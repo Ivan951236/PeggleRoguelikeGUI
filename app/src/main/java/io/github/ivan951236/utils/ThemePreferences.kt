@@ -3,6 +3,8 @@ package io.github.ivan951236.utils
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
+import io.github.ivan951236.ui.theme.AppTheme
+import io.github.ivan951236.ui.theme.AppTheme.*
 
 class ThemePreferences private constructor(context: Context) {
     
@@ -13,6 +15,8 @@ class ThemePreferences private constructor(context: Context) {
     companion object {
         private const val KEY_THEME_MODE = "theme_mode"
         private const val DEFAULT_THEME_MODE = 0 // 0 = Auto (Material You on Android 12+, Purple on older), 1 = Material You, 2 = Purple
+        private const val KEY_SELECTED_THEME = "selected_theme"
+        private const val DEFAULT_SELECTED_THEME = "DEFAULT" // Default theme selection
         
         @Volatile
         private var INSTANCE: ThemePreferences? = null
@@ -46,6 +50,24 @@ class ThemePreferences private constructor(context: Context) {
             ThemeMode.AUTO -> 0
         }
         prefs.edit().putInt(KEY_THEME_MODE, value).apply()
+    }
+    
+    fun getSelectedAppTheme(): AppTheme {
+        val themeName = prefs.getString(KEY_SELECTED_THEME, DEFAULT_SELECTED_THEME) ?: DEFAULT_SELECTED_THEME
+        return when (themeName) {
+            "LIGHT_PURPLE" -> AppTheme.LIGHT_PURPLE
+            "BLACK_PURPLE_AMOLED" -> AppTheme.BLACK_PURPLE_AMOLED
+            else -> AppTheme.DEFAULT
+        }
+    }
+    
+    fun setSelectedAppTheme(theme: AppTheme) {
+        val themeName = when (theme) {
+            LIGHT_PURPLE -> "LIGHT_PURPLE"
+            BLACK_PURPLE_AMOLED -> "BLACK_PURPLE_AMOLED"
+            DEFAULT -> "DEFAULT"
+        }
+        prefs.edit().putString(KEY_SELECTED_THEME, themeName).apply()
     }
     
     fun shouldUseDynamicColors(): Boolean {

@@ -6,14 +6,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import io.github.ivan951236.utils.RankCalculationManager
+import io.github.ivan951236.utils.SessionIdUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RankCalculationScreen(
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
     var roguelikeWins by remember { mutableStateOf("") }
     var levelWins by remember { mutableStateOf("") }
     var clutches by remember { mutableStateOf("") }
@@ -23,6 +27,7 @@ fun RankCalculationScreen(
     var feverModePoints by remember { mutableStateOf("") }
     
     var calculatedRank by remember { mutableStateOf("") }
+    var saveStatus by remember { mutableStateOf("") }
     
     Column(
         modifier = Modifier
@@ -145,6 +150,41 @@ fun RankCalculationScreen(
             Text("Calculate Rank")
         }
         
+        Button(
+            onClick = {
+                try {
+                    val roguelikeWinsVal = roguelikeWins.toIntOrNull() ?: 0
+                    val levelWinsVal = levelWins.toIntOrNull() ?: 0
+                    val clutchesVal = clutches.toIntOrNull() ?: 0
+                    val totalMissesVal = totalMisses.toIntOrNull() ?: 0
+                    val lostRoundsVal = lostRounds.toIntOrNull() ?: 0
+                    val lostOnBossLevelVal = lostOnBossLevel.toIntOrNull() ?: 0
+                    val feverModePointsVal = feverModePoints.toIntOrNull() ?: 0
+                    val sessionId = SessionIdUtils.generateSessionId()
+                    
+                    val rankData = RankCalculationManager.RankData(
+                        roguelikeWins = roguelikeWinsVal,
+                        levelWins = levelWinsVal,
+                        clutches = clutchesVal,
+                        totalMisses = totalMissesVal,
+                        lostRounds = lostRoundsVal,
+                        lostOnBossLevel = lostOnBossLevelVal,
+                        feverModePoints = feverModePointsVal,
+                        sessionId = sessionId
+                    )
+                    
+                    val manager = RankCalculationManager(context)
+                    manager.saveRankCalculation(rankData)
+                    saveStatus = "Rank calculation saved successfully!"
+                } catch (e: Exception) {
+                    saveStatus = "Error saving rank: ${e.message}"
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Save to TOML File")
+        }
+        
         if (calculatedRank.isNotEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -154,6 +194,20 @@ fun RankCalculationScreen(
             ) {
                 Text(
                     text = calculatedRank,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+        
+        if (saveStatus.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Text(
+                    text = saveStatus,
                     modifier = Modifier.padding(16.dp)
                 )
             }

@@ -38,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import io.github.ivan951236.ui.DuelScreen
 import io.github.ivan951236.ui.RankCalculationScreen
 import io.github.ivan951236.ui.settings.SettingsScreen
+import io.github.ivan951236.ui.themes.DarkThemesScreen
+import io.github.ivan951236.ui.themes.LightThemesScreen
 import io.github.ivan951236.utils.ThemePreferences
 import io.github.ivan951236.utils.ThemeState
 import io.github.ivan951236.ui.theme.PeggleRoguelikePresetGeneratorTheme
@@ -56,7 +58,7 @@ private val inventoryItemNames = listOf(
     "Master Hu"
 )
 
-private val peggleLevelNames = listOf(
+private val regularLevelNames = listOf(
     "Peggleland", "Slip and Slide", "Bjorn's Gazebo", "Das Bucket", "Snow Day",
     "Birdy's Crib", "Buffalo Wings", "Skate Park", "Spiral of Doom", "Mr. Peepers",
     "Scarab Crunch", "Infinite Cheese", "Ra Deal", "Croco-Gator Pit", "The Fever Level",
@@ -64,9 +66,12 @@ private val peggleLevelNames = listOf(
     "Pearl Clam", "Insane Aquarium", "Tasty Waves", "Our Favorite Eel", "Love Story",
     "Waves", "Spiderweb", "Blockers", "Baseball", "Vermin", "Holland Oats",
     "I Heart Flowers", "Workin From Home", "Tula's Ride", "70 and Sunny", "Win a Monkey",
-    "Dog Pinball", "Spin Again", "Roll 'em", "Five of a Kind", "The Love Moat",
-    "Doom with a View", "Rhombi", "9 Luft Ballons", "Twister Sisters", "Spin Cycle",
-    "The Dude Abides", "When Pigs Fly", "Yang, Yin", "Zen Frog"
+    "Dog Pinball", "Spin Again", "Roll 'em", "Five of a Kind"
+)
+
+private val miniBossLevelNames = listOf(
+    "The Love Moat", "Doom with a View", "Rhombi", "9 Luft Ballons", "Twister Sisters",
+    "Spin Cycle", "The Dude Abides", "When Pigs Fly", "Yang, Yin", "Zen Frog"
 )
 
 private val bossLevelNames = listOf(
@@ -85,6 +90,8 @@ sealed class Screen(val route: String, val title: String) {
     object Settings     : Screen("settings",      "Settings")
     object Duel         : Screen("duel",          "Duel")
     object RankCalculation : Screen("rank_calculation", "Rank Calculator")
+    object DarkThemes   : Screen("dark_themes",   "Dark Themes")
+    object LightThemes  : Screen("light_themes",  "Light Themes")
 }
 
 class MainActivity : ComponentActivity() {
@@ -94,6 +101,7 @@ class MainActivity : ComponentActivity() {
             val themeState = ThemeState.rememberThemeState()
             
             PeggleRoguelikePresetGeneratorTheme(
+                theme = themeState.selectedTheme,
                 dynamicColor = themeState.dynamicColor
             ) {
                 AppNavigator(themeState)
@@ -209,7 +217,9 @@ fun AppNavigator(themeState: ThemeState) {
             composable(Screen.Settings.route)     { 
                 SettingsScreen(
                     onBackClick = { navController.popBackStack() },
-                    themeState = themeState
+                    themeState = themeState,
+                    onNavigateToDarkThemes = { navController.navigate(Screen.DarkThemes.route) },
+                    onNavigateToLightThemes = { navController.navigate(Screen.LightThemes.route) }
                 ) 
             }
             composable(Screen.Duel.route) {
@@ -220,6 +230,16 @@ fun AppNavigator(themeState: ThemeState) {
             }
             composable(Screen.RankCalculation.route) {
                 RankCalculationScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.DarkThemes.route) {
+                DarkThemesScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.LightThemes.route) {
+                LightThemesScreen(
                     onBackClick = { navController.popBackStack() }
                 )
             }
@@ -265,21 +285,30 @@ fun BottomNavigationBar(navController: NavController) {
 
 // 3) Generators that pick names (internally using indices)
 fun generatePeggleLevels(): List<Pair<String, String>> =
-    List(15) {
-        val level    = peggleLevelNames.random()
+    List(31) { index ->
+        val level = when (index + 1) {
+            16, 20, 26 -> miniBossLevelNames.random() // Mini-boss levels
+            else -> regularLevelNames.random() // Regular levels
+        }
         val modifier = inventoryItemNames.random()
         level to modifier
     }
 
 // Dual player version
 fun generatePeggleLevelsForDual(): Pair<List<Pair<String, String>>, List<Pair<String, String>>> {
-    val player1Levels = List(15) {
-        val level    = peggleLevelNames.random()
+    val player1Levels = List(31) { index ->
+        val level = when (index + 1) {
+            16, 20, 26 -> miniBossLevelNames.random() // Mini-boss levels
+            else -> regularLevelNames.random() // Regular levels
+        }
         val modifier = inventoryItemNames.random()
         level to modifier
     }
-    val player2Levels = List(15) {
-        val level    = peggleLevelNames.random()
+    val player2Levels = List(31) { index ->
+        val level = when (index + 1) {
+            16, 20, 26 -> miniBossLevelNames.random() // Mini-boss levels
+            else -> regularLevelNames.random() // Regular levels
+        }
         val modifier = inventoryItemNames.random()
         level to modifier
     }
@@ -300,16 +329,16 @@ fun generateBossLevelForDual(): Pair<Pair<String, String>, Pair<String, String>>
 }
 
 fun generateInventory(): List<String> =
-    List(3) {
+    List(2) {
         inventoryItemNames.random()
     }
 
 // Dual player version
 fun generateInventoryForDual(): Pair<List<String>, List<String>> {
-    val player1Inventory = List(3) {
+    val player1Inventory = List(2) {
         inventoryItemNames.random()
     }
-    val player2Inventory = List(3) {
+    val player2Inventory = List(2) {
         inventoryItemNames.random()
     }
     return Pair(player1Inventory, player2Inventory)
