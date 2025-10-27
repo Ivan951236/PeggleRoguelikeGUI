@@ -1,5 +1,5 @@
 # PeggleRoguelikeGUI
-This is a Peggle Roguelike Preset Generator made in C++ and Qt 6
+This is a Peggle Roguelike Preset Generator made in Kotlin, Java version in the [PeggleRoguelikeJava](https://github.com/Ivan951236/PeggleRoguelikeJava) Repository, hard mode for both is in hardmode branch
 
 # Custom Themes
 Desktop Java from the [PeggleRoguelikeJava](https://github.com/Ivan951236/PeggleRoguelikeJava) repository is currently the only version that supports this feature...
